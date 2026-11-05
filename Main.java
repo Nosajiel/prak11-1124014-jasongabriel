@@ -91,7 +91,8 @@ public class Main {
         System.out.println("1. Cash (Wallet baru)");
         System.out.println("2. Debit Card");
         System.out.println("3. Credit Card");
-        System.out.print("Pilih jenis (1-3): ");
+        System.out.println("4. Ewallet");
+        System.out.print("Pilih jenis (1-4): ");
         switch (scanner.nextLine().trim()) {
             case "1": {
                 System.out.print("Nama wallet: ");
@@ -118,6 +119,15 @@ public class Main {
                 String ccv = scanner.nextLine().trim();
                 System.out.print("PIN: ");
                 methods.add(new CreditCard(card, lim, ccv, scanner.nextLine().trim()));
+                break;
+            }
+            case "4": {
+                System.out.print("Nomor HP e-wallet: ");
+                String phone = scanner.nextLine().trim();
+                System.out.print("Saldo e-wallet: ");
+                double bal = readDouble();
+                System.out.print("PIN e-wallet: ");
+                methods.add(new EWallet(phone, bal, scanner.nextLine().trim()));
                 break;
             }
             default:
