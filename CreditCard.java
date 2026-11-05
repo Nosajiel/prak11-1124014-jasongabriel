@@ -1,4 +1,6 @@
-public class CreditCard {
+import java.util.List;
+
+public class CreditCard implements PaymentStrategy {
 
     private final String cardNumber;
     private final double limit;
@@ -14,38 +16,41 @@ public class CreditCard {
         this.currentDebt = 0;
     }
 
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public double getLimit() {
-        return limit;
-    }
-
-    public double getCurrentDebt() {
-        return currentDebt;
-    }
-
     public double getAvailableLimit() {
         return limit - currentDebt;
     }
 
-    public String getCcv() {
-        return ccv;
-    }
-
-    public String getPin() {
-        return pin;
-    }
-
+    @Override
     public boolean validate(double amount) {
         return amount > 0 && amount <= getAvailableLimit();
     }
 
+    @Override
     public void pay(double amount) {
-        if (!validate(amount)) {
-            throw new IllegalStateException("Limit kredit tidak mencukupi.");
-        }
+        if (!validate(amount))
+            throw new IllegalStateException("Limit kredit tidak cukup.");
         currentDebt += amount;
+    }
+
+    @Override
+    public List<AuthorizationMethod> getRequiredAuthorizations() {
+        return List.of(AuthorizationMethod.CCV, AuthorizationMethod.PIN);
+    }
+
+    @Override
+    public boolean validateAuthorization(AuthorizationMethod method, String input) {
+        switch (method) {
+            case CCV:
+                return input.equals(ccv);
+            case PIN:
+                return input.equals(pin);
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public String getDescription() {
+        return "Credit [" + cardNumber + "] sisa limit: " + getAvailableLimit();
     }
 }

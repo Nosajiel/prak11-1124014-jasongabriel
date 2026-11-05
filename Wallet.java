@@ -1,4 +1,7 @@
-public class Wallet {
+import java.util.Collections;
+import java.util.List;
+
+public class Wallet implements PaymentStrategy {
 
     private final String name;
     private double cashValue;
@@ -8,22 +11,30 @@ public class Wallet {
         this.cashValue = cashValue;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public double getCashValue() {
-        return cashValue;
-    }
-
+    @Override
     public boolean validate(double amount) {
         return amount > 0 && cashValue >= amount;
     }
 
+    @Override
     public void pay(double amount) {
-        if (!validate(amount)) {
-            throw new IllegalStateException("Saldo cash tidak mencukupi.");
-        }
+        if (!validate(amount))
+            throw new IllegalStateException("Saldo cash tidak cukup.");
         cashValue -= amount;
+    }
+
+    @Override
+    public List<AuthorizationMethod> getRequiredAuthorizations() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean validateAuthorization(AuthorizationMethod method, String input) {
+        return false;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Cash [" + name + "] saldo: " + cashValue;
     }
 }
