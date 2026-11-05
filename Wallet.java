@@ -37,4 +37,9 @@ public class Wallet implements PaymentStrategy {
     public String getDescription() {
         return "Cash [" + name + "] saldo: " + cashValue;
     }
+
+    @Override
+    public boolean canPay(double amount) {
+        return amount >= 100 && amount <= 1_000_000;
+    }
 }

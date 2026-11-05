@@ -38,4 +38,9 @@ public class DebitCard implements PaymentStrategy {
     public String getDescription() {
         return "Debit [" + cardNumber + "] saldo: " + balance;
     }
+
+    @Override
+    public boolean canPay(double amount) {
+        return amount > 0 && amount <= 10_000_000;
+    }
 }

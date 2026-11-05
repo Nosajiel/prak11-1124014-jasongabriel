@@ -53,4 +53,9 @@ public class CreditCard implements PaymentStrategy {
     public String getDescription() {
         return "Credit [" + cardNumber + "] sisa limit: " + getAvailableLimit();
     }
+
+    @Override
+    public boolean canPay(double amount) {
+        return amount >= 100_000 && amount <= 100_000_000;
+    }
 }

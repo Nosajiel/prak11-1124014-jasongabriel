@@ -51,12 +51,23 @@ public class Main {
             return;
         }
 
-        System.out.println("Metode tersedia:");
-        for (int i = 0; i < methods.size(); i++) {
-            System.out.println("  " + (i + 1) + ". " + methods.get(i).getDescription());
+        List<PaymentStrategy> available = new ArrayList<>();
+        for (PaymentStrategy s : methods) {
+            if (s.canPay(amount))
+                available.add(s);
         }
 
-        System.out.print("Pilih (1-" + methods.size() + "): ");
+        if (available.isEmpty()) {
+            System.out.println("Tidak ada metode pembayaran yang tersedia untuk nominal tersebut.");
+            return;
+        }
+
+        System.out.println("Metode tersedia:");
+        for (int i = 0; i < available.size(); i++) {
+            System.out.println("  " + (i + 1) + ". " + available.get(i).getDescription());
+        }
+
+        System.out.print("Pilih (1-" + available.size() + "): ");
         int idx;
         try {
             idx = Integer.parseInt(scanner.nextLine().trim()) - 1;
@@ -64,13 +75,13 @@ public class Main {
             System.out.println("Input tidak valid.");
             return;
         }
-        if (idx < 0 || idx >= methods.size()) {
+        if (idx < 0 || idx >= available.size()) {
             System.out.println("Pilihan tidak valid.");
             return;
         }
 
         try {
-            processor.processPayment(methods.get(idx), amount);
+            processor.processPayment(available.get(idx), amount);
         } catch (RuntimeException e) {
             System.out.println("!! " + e.getMessage());
         }
