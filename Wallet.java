@@ -2,7 +2,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class Wallet implements PaymentStrategy {
-
     private final String name;
     private double cashValue;
 
@@ -29,17 +28,12 @@ public class Wallet implements PaymentStrategy {
     }
 
     @Override
-    public boolean validateAuthorization(AuthorizationMethod method, String input) {
-        return false;
+    public boolean canPay(double amount) {
+        return amount >= 100 && amount <= 1_000_000;
     }
 
     @Override
     public String getDescription() {
         return "Cash [" + name + "] saldo: " + cashValue;
-    }
-
-    @Override
-    public boolean canPay(double amount) {
-        return amount >= 100 && amount <= 1_000_000;
     }
 }

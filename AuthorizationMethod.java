@@ -1,5 +1,5 @@
-public enum AuthorizationMethod {
-    PIN,
-    CCV,
-    OTP
+public interface AuthorizationMethod {
+    String getName();
+    String getPrompt();
+    boolean authorize(String input);
 }

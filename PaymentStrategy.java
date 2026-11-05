@@ -7,9 +7,7 @@ public interface PaymentStrategy {
 
     List<AuthorizationMethod> getRequiredAuthorizations();
 
-    boolean validateAuthorization(AuthorizationMethod method, String input);
-
-    boolean canPay(double amount); 
+    boolean canPay(double amount);
 
     String getDescription();
 }

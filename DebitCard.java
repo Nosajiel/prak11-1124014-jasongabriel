@@ -1,7 +1,6 @@
 import java.util.List;
 
 public class DebitCard implements PaymentStrategy {
-
     private final String cardNumber;
     private double balance;
     private final String pin;
@@ -26,21 +25,16 @@ public class DebitCard implements PaymentStrategy {
 
     @Override
     public List<AuthorizationMethod> getRequiredAuthorizations() {
-        return List.of(AuthorizationMethod.PIN);
-    }
-
-    @Override
-    public boolean validateAuthorization(AuthorizationMethod method, String input) {
-        return method == AuthorizationMethod.PIN && input.equals(pin);
-    }
-
-    @Override
-    public String getDescription() {
-        return "Debit [" + cardNumber + "] saldo: " + balance;
+        return List.of(new PinAuthorization(pin));
     }
 
     @Override
     public boolean canPay(double amount) {
         return amount > 0 && amount <= 10_000_000;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Debit [" + cardNumber + "] saldo: " + balance;
     }
 }

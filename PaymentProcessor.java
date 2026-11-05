@@ -18,25 +18,14 @@ public class PaymentProcessor {
         List<AuthorizationMethod> requiredAuthorizations = paymentStrategy.getRequiredAuthorizations();
 
         for (AuthorizationMethod method : requiredAuthorizations) {
-            System.out.print(promptFor(method));
+            System.out.print(method.getPrompt()); 
             String input = scanner.nextLine().trim();
-            if (!paymentStrategy.validateAuthorization(method, input)) {
-                throw new IllegalArgumentException("Otorisasi " + method + " gagal.");
+            if (!method.authorize(input)) { 
+                throw new IllegalArgumentException("Otorisasi " + method.getName() + " gagal.");
             }
         }
 
         paymentStrategy.pay(amount);
-        System.out.println("Pembayaran berhasil: Rp " + amount);
-    }
-
-    private String promptFor(AuthorizationMethod method) {
-        switch (method) {
-            case PIN:
-                return "Masukkan PIN: ";
-            case CCV:
-                return "Masukkan CCV: ";
-            default:
-                return "Masukkan " + method.name() + ": ";
-        }
+        System.out.println(" Pembayaran berhasil: Rp " + amount);
     }
 }

@@ -1,7 +1,6 @@
 import java.util.List;
 
 public class CreditCard implements PaymentStrategy {
-
     private final String cardNumber;
     private final double limit;
     private double currentDebt;
@@ -34,28 +33,16 @@ public class CreditCard implements PaymentStrategy {
 
     @Override
     public List<AuthorizationMethod> getRequiredAuthorizations() {
-        return List.of(AuthorizationMethod.CCV, AuthorizationMethod.PIN);
-    }
-
-    @Override
-    public boolean validateAuthorization(AuthorizationMethod method, String input) {
-        switch (method) {
-            case CCV:
-                return input.equals(ccv);
-            case PIN:
-                return input.equals(pin);
-            default:
-                return false;
-        }
-    }
-
-    @Override
-    public String getDescription() {
-        return "Credit [" + cardNumber + "] sisa limit: " + getAvailableLimit();
+        return List.of(new CcvAuthorization(ccv), new PinAuthorization(pin));
     }
 
     @Override
     public boolean canPay(double amount) {
         return amount >= 100_000 && amount <= 100_000_000;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Credit [" + cardNumber + "] sisa limit: " + getAvailableLimit();
     }
 }

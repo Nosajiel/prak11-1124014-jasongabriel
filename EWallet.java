@@ -1,13 +1,9 @@
 import java.util.List;
-import java.util.Random;
 
 public class EWallet implements PaymentStrategy {
-
-    private static final Random RANDOM = new Random();
     private final String phoneNumber;
     private double balance;
     private final String pin;
-    private String currentOtp;
 
     public EWallet(String phoneNumber, double balance, String pin) {
         this.phoneNumber = phoneNumber;
@@ -29,21 +25,7 @@ public class EWallet implements PaymentStrategy {
 
     @Override
     public List<AuthorizationMethod> getRequiredAuthorizations() {
-        currentOtp = String.format("%06d", RANDOM.nextInt(1_000_000));
-        System.out.println("[SIMULASI SMS] OTP Anda: " + currentOtp);
-        return List.of(AuthorizationMethod.PIN, AuthorizationMethod.OTP);
-    }
-
-    @Override
-    public boolean validateAuthorization(AuthorizationMethod method, String input) {
-        switch (method) {
-            case PIN:
-                return input.equals(pin);
-            case OTP:
-                return input.equals(currentOtp);
-            default:
-                return false;
-        }
+        return List.of(new PinAuthorization(pin), new OtpAuthorization());
     }
 
     @Override
